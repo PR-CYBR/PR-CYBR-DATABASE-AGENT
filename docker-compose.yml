@@ -4,14 +4,14 @@ services:
   pr-cybr-database-agent:
     image: prcybr/pr-cybr-database-agent:latest
     container_name: pr-cybr-database-agent
-    env_file: .env # Load environment variables from .env file
+    env_file: .env
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
     networks:
       - pr-cybr-net
     ports:
-      - "8080:80" # Adjust this port as necessary for the Database Agent
+      - "8080:80"
 
 networks:
   pr-cybr-net:
