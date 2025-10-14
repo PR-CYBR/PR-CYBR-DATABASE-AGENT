@@ -26,9 +26,10 @@ jobs:
         run: |
           set -e
           TAG=$(echo ${{ github.sha }} | cut -c1-7)
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
           docker build ./build/ -t prcybr/pr-cybr-database-agent:${TAG} -t prcybr/pr-cybr-database-agent:latest
-      
+
       - name: push image to docker hub
         run: |
-          docker push prcybr/pr-cybr-database-agent:${TAG}
+          docker push prcybr/pr-cybr-database-agent:${{ env.TAG }}
           docker push prcybr/pr-cybr-database-agent:latest
