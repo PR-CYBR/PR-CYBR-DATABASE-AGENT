@@ -9,7 +9,10 @@ env/
 
 # Distribution / packaging
 .Python
-build/
+build/*
+!build/Dockerfile
+!build/requirements.txt
+!build/src
 develop-eggs/
 dist/
 eggs/
