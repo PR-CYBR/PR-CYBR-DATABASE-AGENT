@@ -1,0 +1,27 @@
+name: /plan – Codex Workflow
+on:
+  issue_comment:
+    types: [created]
+jobs:
+  codex:
+    if: contains(github.event.comment.body, '/plan')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Codex environment
+        run: echo "Setting up Codex environment"
+      - name: Execute plan
+        run: |
+          echo "${{ github.event.comment.body }}" > plan.txt
+          # stub codex call
+      - name: Commit results
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@users.noreply.github.com"
+          git checkout codex
+          git add plan.txt
+          git commit -m "Add plan output"
+          git push
