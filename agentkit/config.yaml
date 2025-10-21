@@ -1,0 +1,47 @@
+agent:
+  name: PR-CYBR-DATABASE-AGENT
+  description: Manage database schema migrations, backups, and test databases.
+  triggers:
+    - type: manual
+      event: "/apply_migrations"
+    - type: manual
+      event: "/downgrade_migrations"
+    - type: manual
+      event: "/backup_db"
+    - type: manual
+      event: "/restore_db"
+    - type: manual
+      event: "/create_test_db"
+    - type: scheduled
+      cron: "0 2 * * *"  # daily at 2 AM UTC
+  tasks:
+    - id: apply_migrations
+      description: "Apply Alembic migrations to upgrade schema to head"
+      command: "alembic upgrade head"
+      env:
+        DB_URL: "${{ secrets.DB_URL }}"
+      output: "issue:create"
+    - id: downgrade_migrations
+      description: "Downgrade Alembic to previous version"
+      command: "alembic downgrade -1"
+      env:
+        DB_URL: "${{ secrets.DB_URL }}"
+      output: "issue:create"
+    - id: backup_db
+      description: "Create a backup of the database using pg_dump"
+      command: "pg_dump --dbname=${{ secrets.DB_URL }} --file=backups/db_backup_$(date +%Y%m%d%H%M%S).sql"
+      output: "artifact"
+    - id: restore_db
+      description: "Restore the database from a backup (requires manual approval and credentials)."
+      command: "echo 'Restore operation stub. Provide backup file and credentials.'"
+      output: "issue:create"
+    - id: create_test_db
+      description: "Create temporary test database for CI"
+      command: "createdb test_db && alembic upgrade head"
+      env:
+        TEST_DB_URL: "${{ secrets.TEST_DB_URL }}"
+      output: "issue:create"
+  codex_integration:
+    enabled: true
+    fallback: "local_runner"
+    on_fail: "log_warning"
