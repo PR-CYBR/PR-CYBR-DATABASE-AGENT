@@ -6,7 +6,7 @@ setup(
     packages=find_packages(where='src'),
     package_dir={'': 'src'},
     install_requires=[
-        # Add dependencies from requirements.txt
+        'notion-client>=2.2.0',
     ],
     author='PR-CYBR',
     author_email='support@pr-cybr.com',
