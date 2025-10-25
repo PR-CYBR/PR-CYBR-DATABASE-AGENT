@@ -1,0 +1,59 @@
+name: Notion Sync
+
+on:
+  issues:
+    types: [opened, edited, closed, reopened, assigned, unassigned, labeled, unlabeled]
+  pull_request:
+    types: [opened, reopened, edited, closed, ready_for_review, converted_to_draft, synchronize]
+  discussion:
+    types: [created, edited, answered, unanswered]
+  projects_v2_item:
+    types: [created, edited, reopened, closed, converted]
+  project_card:
+    types: [created, moved, converted, edited, deleted]
+  workflow_run:
+    workflows: ["tfc-sync"]
+    types: [completed]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: read
+      pull-requests: read
+      discussions: read
+      projects: read
+      contents: read
+    env:
+      NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+      NOTION_TASK_DB_ID: ${{ secrets.NOTION_TASK_DB_ID }}
+      NOTION_PR_DB_ID: ${{ secrets.NOTION_PR_DB_ID }}
+      NOTION_PROJECT_DB_ID: ${{ secrets.NOTION_PROJECT_DB_ID }}
+      NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+
+      - name: Capture GitHub event payload
+        run: |
+          cat <<'JSON' > "$RUNNER_TEMP/event.json"
+          ${{ toJson(github.event) }}
+          JSON
+
+      - name: Run Notion sync
+        env:
+          EVENT_TYPE: ${{ github.event_name }}
+          GITHUB_EVENT_PAYLOAD_PATH: $RUNNER_TEMP/event.json
+        run: |
+          python scripts/notion_sync.py "$GITHUB_EVENT_PAYLOAD_PATH"
