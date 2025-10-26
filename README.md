@@ -87,10 +87,20 @@ To deploy the agent to a cloud environment:
 
 2. **Deploy Using GitHub Actions**
 
-   - The deployment workflow is defined in `.github/workflows/docker-compose.yml`.
+   - Container deployment remains available through `.github/workflows/docker-compose.yml`.
    - Push changes to the `main` branch to trigger the deployment workflow automatically.
 
-3. **Manual Deployment**
+3. **Terraform Cloud Automation**
+
+   - Infrastructure runs are initiated via the Terraform Cloud workflow bridge defined in `.github/workflows/tfc-sync.yml`.
+   - Configure the following GitHub repository variables to match your Terraform Cloud workspace:
+     - `TF_CLOUD_ORGANIZATION`: Terraform Cloud organization slug.
+     - `TF_WORKSPACE`: Workspace name that should process runs for this repository.
+     - `TF_CONFIGURATION_DIR`: Relative path to the Terraform configuration (defaults to `.` when unset).
+   - Add a GitHub secret named `TFC_WORKFLOW_TOKEN` that stores a Terraform Cloud API token with permission to upload configurations and create runs.
+   - Store cloud provider credentials and other sensitive values as Terraform Cloud workspace variables so GitHub only triggers runs and never stores infrastructure secrets locally.
+
+4. **Manual Deployment**
 
 - Use the deployment script for manual deployment:
 
