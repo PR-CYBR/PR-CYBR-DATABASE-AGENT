@@ -17,6 +17,17 @@ variable "DOCKERHUB_USERNAME" {
   description = "Docker Hub username"
 }
 
+variable "PR_CYBR_DOCKER_PASS" {
+  type        = string
+  sensitive   = true
+  description = "Password used by automation when logging into Docker Hub"
+}
+
+variable "PR_CYBR_DOCKER_USER" {
+  type        = string
+  description = "Username used by automation when logging into Docker Hub"
+}
+
 # --- Global Infrastructure URIs ---
 variable "GLOBAL_DOMAIN" {
   type        = string
@@ -77,4 +88,58 @@ variable "AGENT_COLLAB" {
   type        = string
   sensitive   = true
   description = "Token for governance, discussions, issues, project boards"
+}
+
+variable "GITHUB_TOKEN" {
+  type        = string
+  sensitive   = true
+  description = "Personal access token scoped for Terraform Cloud automation"
+}
+
+variable "TFC_TOKEN" {
+  type        = string
+  sensitive   = true
+  description = "Terraform Cloud user or team token used for CLI authentication"
+}
+
+# --- Notion Workspace ---
+variable "NOTION_DISCUSSIONS_ARC_DB_ID" {
+  type        = string
+  description = "Database ID for the discussions archive board"
+}
+
+variable "NOTION_ISSUES_BACKLOG_DB_ID" {
+  type        = string
+  description = "Database ID used for issue backlog tracking"
+}
+
+variable "NOTION_KNOWLEDGE_FILE_DB_ID" {
+  type        = string
+  description = "Database ID that stores knowledge file records"
+}
+
+variable "NOTION_PAGE_ID" {
+  type        = string
+  description = "Top-level Notion page coordinating the agent workspace"
+}
+
+variable "NOTION_PR_BACKLOG_DB_ID" {
+  type        = string
+  description = "Database ID tracking pull request backlog entries"
+}
+
+variable "NOTION_PROJECT_BOARD_BACKLOG_DB_ID" {
+  type        = string
+  description = "Database ID backing the primary project board backlog"
+}
+
+variable "NOTION_TASK_BACKLOG_DB_ID" {
+  type        = string
+  description = "Database ID for the task backlog"
+}
+
+variable "NOTION_TOKEN" {
+  type        = string
+  sensitive   = true
+  description = "Integration token granting API access to Notion"
 }
