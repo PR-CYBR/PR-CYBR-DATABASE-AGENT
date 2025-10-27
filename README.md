@@ -1,6 +1,6 @@
 <!--
 Updates that need to be made:
-1. 
+1.
 -->
 
 # PR-CYBR-DATABASE-AGENT
@@ -74,16 +74,18 @@ _This installs the agent as a Python package on your system._
 
 To deploy the agent to a cloud environment:
 
-1. **Configure Repository Secrets**
+1. **Configure Terraform Cloud and GitHub Secrets**
 
 - Navigate to `Settings` > `Secrets and variables` > `Actions` in your GitHub repository.
-- Add the required secrets:
-   - `CLOUD_API_KEY`
-   - `DB_HOST`
-   - `DB_USER`
-   - `DB_PASSWORD`
-   - `DB_NAME`
-   - Any other cloud-specific credentials.
+- Confirm the following secrets are present and match the Terraform Cloud workspace configuration:
+  - `AGENT_ACTIONS`
+  - `DOCKERHUB_USERNAME`
+  - `PR_CYBR_DOCKER_PASS`
+  - `NOTION_TOKEN`
+  - `NOTION_PAGE_ID`
+  - `TFC_TOKEN`
+  - `GLOBAL_DOMAIN`
+- Terraform Cloud workspace variables should mirror these names exactly. Terraform configuration lives under `infra/`.
 
 2. **Deploy Using GitHub Actions**
 
